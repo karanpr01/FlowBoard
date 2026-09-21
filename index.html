@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FlowBoard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="./">FlowBoard</a>
+      <input class="search" type="search" placeholder="Search tasks…" aria-label="Search tasks">
+      <button class="btn btn--primary" type="button">+ Add task</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <h1>Board</h1>
+
+    <dl class="stats" aria-label="Task summary">
+      <div class="stat"><dt>Total</dt><dd>3</dd></div>
+      <div class="stat"><dt>Active</dt><dd>2</dd></div>
+      <div class="stat"><dt>Completed</dt><dd>1</dd></div>
+      <div class="stat"><dt>Overdue</dt><dd>0</dd></div>
+    </dl>
+
+    <div class="board">
+      <section class="column" aria-labelledby="h-todo">
+        <div class="column__head"><h2 id="h-todo">Todo</h2><span class="count">1</span></div>
+        <div class="column__body">
+          <article class="card">
+            <span class="badge badge--high">High</span>
+            <h3 class="card__title">Complete JavaScript DOM project</h3>
+            <p class="card__desc">Finish event delegation and localStorage implementation.</p>
+            <p class="card__due">Due Sep 25</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="column" aria-labelledby="h-progress">
+        <div class="column__head"><h2 id="h-progress">In progress</h2><span class="count">1</span></div>
+        <div class="column__body">
+          <article class="card">
+            <span class="badge badge--medium">Medium</span>
+            <h3 class="card__title">Read the accessibility checklist</h3>
+            <p class="card__due">Due Sep 28</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="column" aria-labelledby="h-done">
+        <div class="column__head"><h2 id="h-done">Completed</h2><span class="count">1</span></div>
+        <div class="column__body">
+          <article class="card">
+            <span class="badge badge--low">Low</span>
+            <h3 class="card__title">Set up project repository</h3>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
