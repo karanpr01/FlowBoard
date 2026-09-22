@@ -94,6 +94,15 @@
   </dialog>
 
   <div class="toasts" id="toasts" aria-live="polite"></div>
+  <dialog id="detailsDialog" aria-labelledby="detailsTitle">
+  <div class="dialog__head">
+    <h2 id="detailsTitle">Task details</h2>
+    <button class="btn btn--ghost" type="button" data-close aria-label="Close">✕</button>
+  </div>
+  <div class="dialog__body" id="detailsBody"></div>
+</dialog>
+
+<div class="menu" id="menu" role="menu" hidden></div>
 
   <script type="module" src="js/main.js"></script>
 </body>

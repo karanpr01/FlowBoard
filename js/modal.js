@@ -1,21 +1,38 @@
-import { createTask } from './tasks.js';
+import { createTask, updateTask, getTask } from './tasks.js';
 import { render } from './render.js';
 import { showToast } from './toast.js';
 
 const dialog = document.querySelector('#taskDialog');
 const form = document.querySelector('#taskForm');
 const submitBtn = document.querySelector('#submitBtn');
+const titleEl = document.querySelector('#taskDialogTitle');
 const FIELDS = { title: 'errTitle', description: 'errDesc', due: 'errDue', tags: 'errTags' };
 
-dialog.querySelectorAll('[data-close]').forEach((b) =>
-  b.addEventListener('click', () => dialog.close())
-);
+let editingId = null;
 
-export function openTaskForm(status = 'todo') {
+dialog.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => dialog.close()));
+
+export function openTaskForm(status = 'todo', taskId = null) {
+  editingId = taskId;
   form.reset();
   clearErrors();
-  form.elements.status.value = status;
   submitBtn.disabled = false;
+
+  const task = taskId ? getTask(taskId) : null;
+  titleEl.textContent = task ? 'Edit task' : 'New task';
+  submitBtn.textContent = task ? 'Save changes' : 'Create task';
+
+  if (task) {
+    form.elements.title.value = task.title;
+    form.elements.description.value = task.description;
+    form.elements.priority.value = task.priority;
+    form.elements.due.value = task.due;
+    form.elements.status.value = task.status;
+    form.elements.tags.value = task.tags.join(', ');
+  } else {
+    form.elements.status.value = status;
+  }
+
   dialog.showModal();
   form.elements.title.focus();
 }
@@ -28,7 +45,7 @@ function readForm() {
     priority: f.priority.value,
     due: f.due.value,
     status: f.status.value,
-    tags: f.tags.value.split(',').map((t) => t.trim()).filter(Boolean),
+    tags: f.tags.value.split(',').map((t) => t.trim()).filter(Boolean).slice(0, 5),
   };
 }
 
@@ -56,8 +73,7 @@ function showErrors(errors) {
     document.querySelector(`#${FIELDS[name]}`).textContent = message;
     form.elements[name].setAttribute('aria-invalid', 'true');
   });
-  const first = Object.keys(errors)[0];
-  if (first) form.elements[first].focus();
+  form.elements[Object.keys(errors)[0]].focus();
 }
 
 form.addEventListener('submit', (e) => {
@@ -66,12 +82,14 @@ form.addEventListener('submit', (e) => {
   const errors = validate(data);
   if (Object.keys(errors).length) return showErrors(errors);
 
-  submitBtn.disabled = true; // blocks double submission
-  const saved = createTask(data);
+  submitBtn.disabled = true;
+  const saved = editingId ? updateTask(editingId, data) : createTask(data);
+  const message = editingId
+    ? (saved ? 'Task updated.' : "Changes made, but we couldn't save them.")
+    : (saved ? 'Task created successfully.' : "Task added, but we couldn't save it.");
+
   dialog.close();
   render();
-  showToast(
-    saved ? 'Task created successfully.' : "Task added, but we couldn't save it to this browser.",
-    { type: saved ? 'success' : 'error' }
-  );
+  showToast(message, { type: saved ? 'success' : 'error' });
+  editingId = null;
 });

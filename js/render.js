@@ -18,12 +18,20 @@ function cardHTML(t) {
     ? `<ul class="tags">${t.tags.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul>`
     : '';
   return `
-    <article class="card" data-id="${t.id}">
-      <span class="badge badge--${t.priority}">${PRIORITY_LABEL[t.priority]}</span>
-      <h3 class="card__title">${escapeHtml(t.title)}</h3>
+    <article class="card${t.status === 'done' ? ' card--done' : ''}" data-id="${t.id}">
+      <div class="card__top">
+        <span class="badge badge--${t.priority}">${PRIORITY_LABEL[t.priority]}</span>
+        <button class="icon-btn" type="button" data-action="menu" data-id="${t.id}" aria-haspopup="menu" aria-label="More actions">⋯</button>
+      </div>
+      <button class="card__open" type="button" data-action="open" data-id="${t.id}">
+        <h3 class="card__title">${escapeHtml(t.title)}</h3>
+      </button>
       ${t.description ? `<p class="card__desc">${escapeHtml(t.description)}</p>` : ''}
       ${tags}
-      ${dueText}
+      <div class="card__foot">
+        ${dueText || '<span></span>'}
+        <button class="check" type="button" data-action="toggle" data-id="${t.id}" aria-label="${t.status === 'done' ? 'Reopen' : 'Mark complete'}">✓</button>
+      </div>
     </article>`;
 }
 
