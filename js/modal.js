@@ -1,0 +1,77 @@
+import { createTask } from './tasks.js';
+import { render } from './render.js';
+import { showToast } from './toast.js';
+
+const dialog = document.querySelector('#taskDialog');
+const form = document.querySelector('#taskForm');
+const submitBtn = document.querySelector('#submitBtn');
+const FIELDS = { title: 'errTitle', description: 'errDesc', due: 'errDue', tags: 'errTags' };
+
+dialog.querySelectorAll('[data-close]').forEach((b) =>
+  b.addEventListener('click', () => dialog.close())
+);
+
+export function openTaskForm(status = 'todo') {
+  form.reset();
+  clearErrors();
+  form.elements.status.value = status;
+  submitBtn.disabled = false;
+  dialog.showModal();
+  form.elements.title.focus();
+}
+
+function readForm() {
+  const f = form.elements;
+  return {
+    title: f.title.value.trim(),
+    description: f.description.value.trim(),
+    priority: f.priority.value,
+    due: f.due.value,
+    status: f.status.value,
+    tags: f.tags.value.split(',').map((t) => t.trim()).filter(Boolean),
+  };
+}
+
+function validate(data) {
+  const errors = {};
+  if (!data.title) errors.title = 'Enter a title so you can find this task later.';
+  else if (data.title.length > 80) errors.title = 'Keep the title to 80 characters or fewer.';
+  if (data.description.length > 500) errors.description = 'Keep the description to 500 characters or fewer.';
+  if (form.elements.due.validity.badInput) errors.due = 'Enter a complete, valid date.';
+  if (data.tags.length > 5) errors.tags = 'Use up to 5 tags.';
+  else if (data.tags.some((t) => t.length > 20)) errors.tags = 'Each tag can be up to 20 characters.';
+  return errors;
+}
+
+function clearErrors() {
+  Object.entries(FIELDS).forEach(([name, errId]) => {
+    document.querySelector(`#${errId}`).textContent = '';
+    form.elements[name].removeAttribute('aria-invalid');
+  });
+}
+
+function showErrors(errors) {
+  clearErrors();
+  Object.entries(errors).forEach(([name, message]) => {
+    document.querySelector(`#${FIELDS[name]}`).textContent = message;
+    form.elements[name].setAttribute('aria-invalid', 'true');
+  });
+  const first = Object.keys(errors)[0];
+  if (first) form.elements[first].focus();
+}
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const data = readForm();
+  const errors = validate(data);
+  if (Object.keys(errors).length) return showErrors(errors);
+
+  submitBtn.disabled = true; // blocks double submission
+  const saved = createTask(data);
+  dialog.close();
+  render();
+  showToast(
+    saved ? 'Task created successfully.' : "Task added, but we couldn't save it to this browser.",
+    { type: saved ? 'success' : 'error' }
+  );
+});

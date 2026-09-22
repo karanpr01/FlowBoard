@@ -16,54 +16,85 @@
     <div class="topbar__inner">
       <a class="brand" href="./">FlowBoard</a>
       <input class="search" type="search" placeholder="Search tasks…" aria-label="Search tasks">
-      <button class="btn btn--primary" type="button">+ Add task</button>
+      <button class="btn btn--primary" type="button" data-action="add" data-status="todo">+ Add task</button>
     </div>
   </header>
 
   <main class="wrap">
     <h1>Board</h1>
-
-    <dl class="stats" aria-label="Task summary">
-      <div class="stat"><dt>Total</dt><dd>3</dd></div>
-      <div class="stat"><dt>Active</dt><dd>2</dd></div>
-      <div class="stat"><dt>Completed</dt><dd>1</dd></div>
-      <div class="stat"><dt>Overdue</dt><dd>0</dd></div>
-    </dl>
+    <dl class="stats" id="stats" aria-label="Task summary"></dl>
 
     <div class="board">
-      <section class="column" aria-labelledby="h-todo">
-        <div class="column__head"><h2 id="h-todo">Todo</h2><span class="count">1</span></div>
-        <div class="column__body">
-          <article class="card">
-            <span class="badge badge--high">High</span>
-            <h3 class="card__title">Complete JavaScript DOM project</h3>
-            <p class="card__desc">Finish event delegation and localStorage implementation.</p>
-            <p class="card__due">Due Sep 25</p>
-          </article>
-        </div>
+      <section class="column" data-status="todo" aria-labelledby="h-todo">
+        <div class="column__head"><h2 id="h-todo">Todo</h2><span class="count" data-count="todo">0</span></div>
+        <div class="column__body" data-body="todo"></div>
       </section>
-
-      <section class="column" aria-labelledby="h-progress">
-        <div class="column__head"><h2 id="h-progress">In progress</h2><span class="count">1</span></div>
-        <div class="column__body">
-          <article class="card">
-            <span class="badge badge--medium">Medium</span>
-            <h3 class="card__title">Read the accessibility checklist</h3>
-            <p class="card__due">Due Sep 28</p>
-          </article>
-        </div>
+      <section class="column" data-status="progress" aria-labelledby="h-progress">
+        <div class="column__head"><h2 id="h-progress">In progress</h2><span class="count" data-count="progress">0</span></div>
+        <div class="column__body" data-body="progress"></div>
       </section>
-
-      <section class="column" aria-labelledby="h-done">
-        <div class="column__head"><h2 id="h-done">Completed</h2><span class="count">1</span></div>
-        <div class="column__body">
-          <article class="card">
-            <span class="badge badge--low">Low</span>
-            <h3 class="card__title">Set up project repository</h3>
-          </article>
-        </div>
+      <section class="column" data-status="done" aria-labelledby="h-done">
+        <div class="column__head"><h2 id="h-done">Completed</h2><span class="count" data-count="done">0</span></div>
+        <div class="column__body" data-body="done"></div>
       </section>
     </div>
   </main>
+
+  <dialog id="taskDialog" aria-labelledby="taskDialogTitle">
+    <form id="taskForm" novalidate>
+      <div class="dialog__head">
+        <h2 id="taskDialogTitle">New task</h2>
+        <button class="btn btn--ghost" type="button" data-close aria-label="Close">✕</button>
+      </div>
+      <div class="dialog__body">
+        <div class="field">
+          <label for="fTitle">Title</label>
+          <input class="input" id="fTitle" name="title" maxlength="80" autocomplete="off" aria-describedby="errTitle">
+          <p class="field-error" id="errTitle"></p>
+        </div>
+        <div class="field">
+          <label for="fDesc">Description (optional)</label>
+          <textarea class="input" id="fDesc" name="description" maxlength="500" aria-describedby="errDesc"></textarea>
+          <p class="field-error" id="errDesc"></p>
+        </div>
+        <fieldset class="field">
+          <legend>Priority</legend>
+          <div class="seg">
+            <label><input type="radio" name="priority" value="high"><span>High</span></label>
+            <label><input type="radio" name="priority" value="medium" checked><span>Medium</span></label>
+            <label><input type="radio" name="priority" value="low"><span>Low</span></label>
+          </div>
+        </fieldset>
+        <div class="two">
+          <div class="field">
+            <label for="fDue">Due date (optional)</label>
+            <input class="input" id="fDue" name="due" type="date" aria-describedby="errDue">
+            <p class="field-error" id="errDue"></p>
+          </div>
+          <div class="field">
+            <label for="fStatus">Status</label>
+            <select class="input" id="fStatus" name="status">
+              <option value="todo">Todo</option>
+              <option value="progress">In progress</option>
+              <option value="done">Completed</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="fTags">Tags (optional, comma-separated, max 5)</label>
+          <input class="input" id="fTags" name="tags" autocomplete="off" placeholder="JavaScript, Learning" aria-describedby="errTags">
+          <p class="field-error" id="errTags"></p>
+        </div>
+      </div>
+      <div class="dialog__foot">
+        <button class="btn btn--secondary" type="button" data-close>Cancel</button>
+        <button class="btn btn--primary" type="submit" id="submitBtn">Create task</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

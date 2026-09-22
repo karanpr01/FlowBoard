@@ -186,6 +186,247 @@ h1 {
     background: var(--low-bg); 
     color: var(--low-fg); 
 }
+.btn--secondary { 
+    background: var(--surface); 
+    border-color: var(--border-strong); 
+    color: var(--text); 
+}
+
+.btn--secondary:hover { 
+    background: var(--surface-2); 
+}
+
+.btn--ghost { 
+    background: transparent; 
+    color: var(--muted); 
+}
+
+.btn--ghost:hover { 
+    background: var(--surface-2);
+ }
+
+.btn:disabled { 
+    opacity: .5; cursor: not-allowed; 
+}
+
+
+.tags { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 4px 6px; 
+    padding: 0; 
+    margin: 0; 
+    list-style: none; 
+}
+
+.tags li { 
+    font-size: 12px; 
+    font-weight: 500; 
+    color: var(--muted); 
+    background: var(--surface-2); 
+    border: 1px solid var(--border); 
+    border-radius: 6px; 
+    padding: 1px 8px; 
+}
+
+.card__due--overdue { 
+    color: var(--high-fg); 
+    font-weight: 600; 
+}
+
+
+.empty { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    text-align: center; 
+    gap: var(--s1); 
+    padding: var(--s6) var(--s4); 
+    color: var(--muted); 
+}
+
+.empty h3 {
+    font-size: 14px; 
+    font-weight: 600; 
+    color: var(--text); 
+}
+
+.empty .btn { 
+    margin-top: var(--s3); 
+}
+
+
+dialog { 
+    border: 0; padding: 0; 
+    border-radius: 16px; 
+    width: min(520px, calc(100% - 32px)); 
+    background: var(--surface); 
+    color: var(--text); 
+    box-shadow: 0 16px 40px rgba(16, 24, 40, .18); 
+}
+
+dialog::backdrop { 
+    background: rgba(15, 17, 21, .46); 
+}
+
+.dialog__head { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: var(--s4) var(--s5); 
+    border-bottom: 1px solid var(--border); 
+}
+
+.dialog__head h2 { 
+    font-size: 16px; 
+    font-weight: 600; 
+}
+
+.dialog__body { 
+    padding: var(--s5); 
+    display: flex; flex-direction: column; 
+    gap: var(--s4); 
+    max-height: 65vh; 
+    overflow: auto; 
+}
+
+.dialog__foot { 
+    display: flex; 
+    justify-content: flex-end; 
+    gap: var(--s2); 
+    padding: var(--s3) var(--s5) var(--s4); 
+    border-top: 1px solid var(--border); 
+}
+
+
+.field { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 6px; 
+    border: 0; 
+    padding: 0; 
+    margin: 0; 
+    min-width: 0; 
+}
+
+.field label, .field legend { 
+    font-size: 13px; 
+    font-weight: 600; 
+    padding: 0; 
+}
+
+.input { 
+    width: 100%; 
+    min-height: 40px; 
+    padding: 8px 12px; 
+    border: 1px solid var(--border-strong); 
+    border-radius: var(--radius-control); 
+    background: var(--surface); 
+    color: inherit; 
+    font: inherit; 
+}
+
+textarea.input { 
+    min-height: 88px; 
+    resize: vertical; 
+}
+
+.input:focus { 
+    outline: 2px solid var(--primary); 
+    outline-offset: 0; 
+    border-color: var(--primary); 
+}
+
+.input[aria-invalid="true"] { 
+    border-color: var(--high-fg); 
+}
+
+.field-error { 
+    color: var(--high-fg); 
+    font-size: 12px; 
+    font-weight: 500; 
+    min-height: 16px; 
+}
+
+.two { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: var(--s4); 
+}
+
+.seg { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: var(--s2); 
+}
+
+.seg label { 
+    position: relative; 
+    font-weight: 500; 
+}
+
+.seg input { 
+    position: absolute; 
+    inset: 0; 
+    width: 100%; 
+    height: 100%; 
+    margin: 0; 
+    opacity: 0; 
+    cursor: pointer; 
+}
+
+.seg span { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    height: 40px; 
+    border: 1px solid var(--border-strong); 
+    border-radius: var(--radius-control); 
+    font-size: 13px; 
+    font-weight: 500; 
+}
+
+.seg input:checked + span { 
+    border-color: var(--primary); 
+    background: var(--primary-soft); 
+    color: var(--primary-hover); 
+    font-weight: 600; 
+}
+
+.seg input:focus-visible + span { 
+    outline: 2px solid var(--primary); 
+    outline-offset: 2px; 
+}
+
+
+.toasts { 
+    position: fixed; 
+    bottom: var(--s6); 
+    left: 50%; 
+    transform: translateX(-50%); 
+    display: flex; 
+    flex-direction: column; 
+    gap: var(--s2); 
+    width: min(420px, calc(100% - 32px)); 
+    z-index: 100; 
+}
+
+.toast { 
+    background: #1B1E25; 
+    color: #F4F5F7; 
+    padding: var(--s3) var(--s4); 
+    border-radius: 10px; 
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .25); 
+}
+
+.toast--error { 
+    border-left: 4px solid #FCA5A5; 
+}
+
+.toast--success { 
+    border-left: 4px solid #86EFAC; 
+}
+
 
 
 /* Temporary mobile tabs */
