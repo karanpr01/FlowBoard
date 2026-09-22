@@ -1,13 +1,18 @@
 import './search.js';
 import './filters.js';
 import './dragdrop.js';
+import './settings.js';
 import { render } from './render.js';
 import { openTaskForm } from './modal.js';
 import { openMenu } from './menu.js';
 import { openDetails } from './details.js';
 import { moveTask } from './tasks.js';
 import { removeTaskWithUndo } from './delete.js';
+import { initTheme } from './theme.js';
+import { initTabs } from './tabs.js';
 
+initTheme();
+initTabs();
 render();
 
 document.addEventListener('click', (e) => {

@@ -1,134 +1,397 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FlowBoard</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/components.css">
-</head>
-<body>
-  <header class="topbar">
-    <div class="topbar__inner">
-      <a class="brand" href="./">FlowBoard</a>
-      <input class="search" id="searchInput" type="search" placeholder="Search tasks…" aria-label="Search tasks">
-      <button class="btn btn--primary" type="button" data-action="add" data-status="todo">+ Add task</button>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <h1>Board</h1>
-        <dl class="stats" id="stats" aria-label="Task summary"></dl>
-
-    <div class="toolbar">
-      <div class="chips" id="chips" role="group" aria-label="Filter tasks">
-        <button class="chip" type="button" data-filter="all"  aria-pressed="true">All</button>
-        <button class="chip" type="button" data-filter="high">High priority</button>
-        <button class="chip" type="button" data-filter="medium">Medium priority</button>
-        <button class="chip" type="button" data-filter="low">Low priority</button>
-        <button class="chip" type="button" data-filter="today">Due today</button>
-        <button class="chip" type="button" data-filter="overdue">Overdue</button>
-        <button class="chip" type="button" data-filter="done">Completed</button>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FlowBoard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__inner">
+        <a class="brand" href="./">FlowBoard</a>
+        <input
+          class="search"
+          id="searchInput"
+          type="search"
+          placeholder="Search tasks…"
+          aria-label="Search tasks"
+        />
+        <div class="top-actions">
+          <button
+            class="icon-btn icon-btn--lg"
+            type="button"
+            id="themeToggle"
+            aria-label="Toggle dark mode"
+          >
+            🌙
+          </button>
+          <button
+            class="icon-btn icon-btn--lg"
+            type="button"
+            id="settingsBtn"
+            aria-label="Settings"
+          >
+            ⚙️
+          </button>
+          <button
+            class="btn btn--primary"
+            type="button"
+            data-action="add"
+            data-status="todo"
+          >
+            + Add task
+          </button>
+        </div>
       </div>
-      <select class="input select-sort" id="sortSelect" aria-label="Sort tasks">
-        <option value="newest">Newest</option>
-        <option value="oldest">Oldest</option>
-        <option value="due">Due date</option>
-        <option value="priority">Priority</option>
-        <option value="az">A–Z</option>
-      </select>
-    </div>
-    <p class="results" id="results" hidden></p>
+    </header>
 
-    <div class="board" id="board">
-      <section class="column" data-status="todo" aria-labelledby="h-todo">
-        <div class="column__head"><h2 id="h-todo">Todo</h2><span class="count" data-count="todo">0</span></div>
-        <div class="column__body" data-body="todo"></div>
-      </section>
-      <section class="column" data-status="progress" aria-labelledby="h-progress">
-        <div class="column__head"><h2 id="h-progress">In progress</h2><span class="count" data-count="progress">0</span></div>
-        <div class="column__body" data-body="progress"></div>
-      </section>
-      <section class="column" data-status="done" aria-labelledby="h-done">
-        <div class="column__head"><h2 id="h-done">Completed</h2><span class="count" data-count="done">0</span></div>
-        <div class="column__body" data-body="done"></div>
-      </section>
-    </div>
-        <div class="panel" id="noResults" hidden>
-      <h2>No tasks found</h2>
-      <p>Try a different search or clear your filters.</p>
-      <button class="btn btn--secondary" type="button" id="clearFiltersBtn">Reset search and filters</button>
-    </div>
-  </main>
+    <main class="wrap">
+      <h1>Board</h1>
+      <dl class="stats" id="stats" aria-label="Task summary"></dl>
 
-  <dialog id="taskDialog" aria-labelledby="taskDialogTitle">
-    <form id="taskForm" novalidate>
+      <div class="toolbar">
+        <div class="chips" id="chips" role="group" aria-label="Filter tasks">
+          <button
+            class="chip"
+            type="button"
+            data-filter="all"
+            aria-pressed="true"
+          >
+            All
+          </button>
+          <button class="chip" type="button" data-filter="high">
+            High priority
+          </button>
+          <button class="chip" type="button" data-filter="medium">
+            Medium priority
+          </button>
+          <button class="chip" type="button" data-filter="low">
+            Low priority
+          </button>
+          <button class="chip" type="button" data-filter="today">
+            Due today
+          </button>
+          <button class="chip" type="button" data-filter="overdue">
+            Overdue
+          </button>
+          <button class="chip" type="button" data-filter="done">
+            Completed
+          </button>
+        </div>
+        <select
+          class="input select-sort"
+          id="sortSelect"
+          aria-label="Sort tasks"
+        >
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="due">Due date</option>
+          <option value="priority">Priority</option>
+          <option value="az">A–Z</option>
+        </select>
+      </div>
+      <p class="results" id="results" hidden></p>
+      <div class="tabs" id="tabs" role="tablist" aria-label="Board columns">
+        <button
+          class="tab"
+          type="button"
+          data-tab="todo"
+          role="tab"
+          aria-selected="true"
+        >
+          Todo <span class="pill" data-tab-count="todo">0</span>
+        </button>
+        <button
+          class="tab"
+          type="button"
+          data-tab="progress"
+          role="tab"
+          aria-selected="false"
+        >
+          In progress <span class="pill" data-tab-count="progress">0</span>
+        </button>
+        <button
+          class="tab"
+          type="button"
+          data-tab="done"
+          role="tab"
+          aria-selected="false"
+        >
+          Done <span class="pill" data-tab-count="done">0</span>
+        </button>
+      </div>
+
+      <div class="board" id="board">
+        <section class="column" data-status="todo" aria-labelledby="h-todo">
+          <div class="column__head">
+            <h2 id="h-todo">Todo</h2>
+            <span class="count" data-count="todo">0</span>
+          </div>
+          <div class="column__body" data-body="todo"></div>
+        </section>
+        <section
+          class="column"
+          data-status="progress"
+          aria-labelledby="h-progress"
+        >
+          <div class="column__head">
+            <h2 id="h-progress">In progress</h2>
+            <span class="count" data-count="progress">0</span>
+          </div>
+          <div class="column__body" data-body="progress"></div>
+        </section>
+        <section class="column" data-status="done" aria-labelledby="h-done">
+          <div class="column__head">
+            <h2 id="h-done">Completed</h2>
+            <span class="count" data-count="done">0</span>
+          </div>
+          <div class="column__body" data-body="done"></div>
+        </section>
+      </div>
+      <div class="panel" id="noResults" hidden>
+        <h2>No tasks found</h2>
+        <p>Try a different search or clear your filters.</p>
+        <button class="btn btn--secondary" type="button" id="clearFiltersBtn">
+          Reset search and filters
+        </button>
+      </div>
+    </main>
+
+    <dialog id="taskDialog" aria-labelledby="taskDialogTitle">
+      <form id="taskForm" novalidate>
+        <div class="dialog__head">
+          <h2 id="taskDialogTitle">New task</h2>
+          <button
+            class="btn btn--ghost"
+            type="button"
+            data-close
+            aria-label="Close"
+          >
+            ✕
+          </button>
+        </div>
+        <div class="dialog__body">
+          <div class="field">
+            <label for="fTitle">Title</label>
+            <input
+              class="input"
+              id="fTitle"
+              name="title"
+              maxlength="80"
+              autocomplete="off"
+              aria-describedby="errTitle"
+            />
+            <p class="field-error" id="errTitle"></p>
+          </div>
+          <div class="field">
+            <label for="fDesc">Description (optional)</label>
+            <textarea
+              class="input"
+              id="fDesc"
+              name="description"
+              maxlength="500"
+              aria-describedby="errDesc"
+            ></textarea>
+            <p class="field-error" id="errDesc"></p>
+          </div>
+          <fieldset class="field">
+            <legend>Priority</legend>
+            <div class="seg">
+              <label
+                ><input type="radio" name="priority" value="high" /><span
+                  >High</span
+                ></label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="priority"
+                  value="medium"
+                  checked
+                /><span>Medium</span></label
+              >
+              <label
+                ><input type="radio" name="priority" value="low" /><span
+                  >Low</span
+                ></label
+              >
+            </div>
+          </fieldset>
+          <div class="two">
+            <div class="field">
+              <label for="fDue">Due date (optional)</label>
+              <input
+                class="input"
+                id="fDue"
+                name="due"
+                type="date"
+                aria-describedby="errDue"
+              />
+              <p class="field-error" id="errDue"></p>
+            </div>
+            <div class="field">
+              <label for="fStatus">Status</label>
+              <select class="input" id="fStatus" name="status">
+                <option value="todo">Todo</option>
+                <option value="progress">In progress</option>
+                <option value="done">Completed</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="fTags">Tags (optional, comma-separated, max 5)</label>
+            <input
+              class="input"
+              id="fTags"
+              name="tags"
+              autocomplete="off"
+              placeholder="JavaScript, Learning"
+              aria-describedby="errTags"
+            />
+            <p class="field-error" id="errTags"></p>
+          </div>
+        </div>
+        <div class="dialog__foot">
+          <button class="btn btn--secondary" type="button" data-close>
+            Cancel
+          </button>
+          <button class="btn btn--primary" type="submit" id="submitBtn">
+            Create task
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toasts" id="toasts" aria-live="polite"></div>
+    <dialog id="detailsDialog" aria-labelledby="detailsTitle">
       <div class="dialog__head">
-        <h2 id="taskDialogTitle">New task</h2>
-        <button class="btn btn--ghost" type="button" data-close aria-label="Close">✕</button>
+        <h2 id="detailsTitle">Task details</h2>
+        <button
+          class="btn btn--ghost"
+          type="button"
+          data-close
+          aria-label="Close"
+        >
+          ✕
+        </button>
+      </div>
+      <div class="dialog__body" id="detailsBody"></div>
+    </dialog>
+
+    <div class="menu" id="menu" role="menu" hidden></div>
+
+    <dialog id="settingsDialog" aria-labelledby="settingsTitle">
+      <div class="dialog__head">
+        <h2 id="settingsTitle">Settings</h2>
+        <button
+          class="btn btn--ghost"
+          type="button"
+          data-close
+          aria-label="Close"
+        >
+          ✕
+        </button>
       </div>
       <div class="dialog__body">
-        <div class="field">
-          <label for="fTitle">Title</label>
-          <input class="input" id="fTitle" name="title" maxlength="80" autocomplete="off" aria-describedby="errTitle">
-          <p class="field-error" id="errTitle"></p>
-        </div>
-        <div class="field">
-          <label for="fDesc">Description (optional)</label>
-          <textarea class="input" id="fDesc" name="description" maxlength="500" aria-describedby="errDesc"></textarea>
-          <p class="field-error" id="errDesc"></p>
-        </div>
         <fieldset class="field">
-          <legend>Priority</legend>
+          <legend>Appearance</legend>
           <div class="seg">
-            <label><input type="radio" name="priority" value="high"><span>High</span></label>
-            <label><input type="radio" name="priority" value="medium" checked><span>Medium</span></label>
-            <label><input type="radio" name="priority" value="low"><span>Low</span></label>
+            <label
+              ><input type="radio" name="theme" value="light" /><span
+                >Light</span
+              ></label
+            >
+            <label
+              ><input type="radio" name="theme" value="dark" /><span
+                >Dark</span
+              ></label
+            >
+            <label
+              ><input type="radio" name="theme" value="system" /><span
+                >System</span
+              ></label
+            >
           </div>
         </fieldset>
-        <div class="two">
-          <div class="field">
-            <label for="fDue">Due date (optional)</label>
-            <input class="input" id="fDue" name="due" type="date" aria-describedby="errDue">
-            <p class="field-error" id="errDue"></p>
+        <hr class="sep" />
+        <div class="data-row">
+          <div>
+            <strong>Export tasks</strong>
+            <p>Download your task data as a JSON file.</p>
           </div>
-          <div class="field">
-            <label for="fStatus">Status</label>
-            <select class="input" id="fStatus" name="status">
-              <option value="todo">Todo</option>
-              <option value="progress">In progress</option>
-              <option value="done">Completed</option>
-            </select>
-          </div>
+          <button class="btn btn--secondary" type="button" id="exportBtn">
+            Export
+          </button>
         </div>
+        <div class="data-row">
+          <div>
+            <strong>Import tasks</strong>
+            <p>Restore tasks from a FlowBoard backup file.</p>
+          </div>
+          <button class="btn btn--secondary" type="button" id="importBtn">
+            Import
+          </button>
+          <input type="file" id="importFile" accept="application/json" hidden />
+        </div>
+        <div class="data-row data-row--danger">
+          <div>
+            <strong>Clear all data</strong>
+            <p>Permanently remove all locally stored tasks.</p>
+          </div>
+          <button class="btn btn--danger" type="button" id="clearDataBtn">
+            Clear data
+          </button>
+        </div>
+        <p id="settingsMsg" class="settings-msg" role="status"></p>
+      </div>
+    </dialog>
+
+    <dialog id="clearDialog" aria-labelledby="clearTitle">
+      <div class="dialog__head">
+        <h2 id="clearTitle">Delete all tasks?</h2>
+        <button
+          class="btn btn--ghost"
+          type="button"
+          data-close
+          aria-label="Close"
+        >
+          ✕
+        </button>
+      </div>
+      <div class="dialog__body">
+        <p>
+          This permanently deletes all tasks from this browser. This can't be
+          undone — export a backup first if you might need them.
+        </p>
         <div class="field">
-          <label for="fTags">Tags (optional, comma-separated, max 5)</label>
-          <input class="input" id="fTags" name="tags" autocomplete="off" placeholder="JavaScript, Learning" aria-describedby="errTags">
-          <p class="field-error" id="errTags"></p>
+          <label for="clearInput">Type DELETE to confirm</label>
+          <input class="input" id="clearInput" autocomplete="off" />
         </div>
       </div>
       <div class="dialog__foot">
-        <button class="btn btn--secondary" type="button" data-close>Cancel</button>
-        <button class="btn btn--primary" type="submit" id="submitBtn">Create task</button>
+        <button class="btn btn--secondary" type="button" data-close>
+          Cancel
+        </button>
+        <button
+          class="btn btn--danger"
+          type="button"
+          id="clearConfirmBtn"
+          disabled
+        >
+          Delete everything
+        </button>
       </div>
-    </form>
-  </dialog>
+    </dialog>
 
-  <div class="toasts" id="toasts" aria-live="polite"></div>
-  <dialog id="detailsDialog" aria-labelledby="detailsTitle">
-  <div class="dialog__head">
-    <h2 id="detailsTitle">Task details</h2>
-    <button class="btn btn--ghost" type="button" data-close aria-label="Close">✕</button>
-  </div>
-  <div class="dialog__body" id="detailsBody"></div>
-</dialog>
-
-<div class="menu" id="menu" role="menu" hidden></div>
-
-  <script type="module" src="js/main.js"></script>
-</body>
+    <script type="module" src="js/main.js"></script>
+  </body>
 </html>

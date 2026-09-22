@@ -2,6 +2,7 @@ import { state, getStats } from './tasks.js';
 import { escapeHtml, formatDate, todayISO } from './utils.js';
 import { getVisibleTasks, queryState, isFiltering } from './query.js';
 import { makeCardsDraggable } from './dragdrop.js';
+import { applyTabVisibility } from './tabs.js';
 
 const STATUSES = ['todo', 'progress', 'done'];
 const PRIORITY_LABEL = { high: 'High', medium: 'Medium', low: 'Low' };
@@ -93,4 +94,5 @@ export function render() {
   renderStats();
   renderBoard();
   makeCardsDraggable();
+  applyTabVisibility();
 }
