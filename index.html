@@ -15,16 +15,36 @@
   <header class="topbar">
     <div class="topbar__inner">
       <a class="brand" href="./">FlowBoard</a>
-      <input class="search" type="search" placeholder="Search tasks…" aria-label="Search tasks">
+      <input class="search" id="searchInput" type="search" placeholder="Search tasks…" aria-label="Search tasks">
       <button class="btn btn--primary" type="button" data-action="add" data-status="todo">+ Add task</button>
     </div>
   </header>
 
   <main class="wrap">
     <h1>Board</h1>
-    <dl class="stats" id="stats" aria-label="Task summary"></dl>
+        <dl class="stats" id="stats" aria-label="Task summary"></dl>
 
-    <div class="board">
+    <div class="toolbar">
+      <div class="chips" id="chips" role="group" aria-label="Filter tasks">
+        <button class="chip" type="button" data-filter="all"  aria-pressed="true">All</button>
+        <button class="chip" type="button" data-filter="high">High priority</button>
+        <button class="chip" type="button" data-filter="medium">Medium priority</button>
+        <button class="chip" type="button" data-filter="low">Low priority</button>
+        <button class="chip" type="button" data-filter="today">Due today</button>
+        <button class="chip" type="button" data-filter="overdue">Overdue</button>
+        <button class="chip" type="button" data-filter="done">Completed</button>
+      </div>
+      <select class="input select-sort" id="sortSelect" aria-label="Sort tasks">
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+        <option value="due">Due date</option>
+        <option value="priority">Priority</option>
+        <option value="az">A–Z</option>
+      </select>
+    </div>
+    <p class="results" id="results" hidden></p>
+
+    <div class="board" id="board">
       <section class="column" data-status="todo" aria-labelledby="h-todo">
         <div class="column__head"><h2 id="h-todo">Todo</h2><span class="count" data-count="todo">0</span></div>
         <div class="column__body" data-body="todo"></div>
@@ -37,6 +57,11 @@
         <div class="column__head"><h2 id="h-done">Completed</h2><span class="count" data-count="done">0</span></div>
         <div class="column__body" data-body="done"></div>
       </section>
+    </div>
+        <div class="panel" id="noResults" hidden>
+      <h2>No tasks found</h2>
+      <p>Try a different search or clear your filters.</p>
+      <button class="btn btn--secondary" type="button" id="clearFiltersBtn">Reset search and filters</button>
     </div>
   </main>
 

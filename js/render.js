@@ -1,5 +1,7 @@
 import { state, getStats } from './tasks.js';
 import { escapeHtml, formatDate, todayISO } from './utils.js';
+import { getVisibleTasks, queryState, isFiltering } from './query.js';
+import { makeCardsDraggable } from './dragdrop.js';
 
 const STATUSES = ['todo', 'progress', 'done'];
 const PRIORITY_LABEL = { high: 'High', medium: 'Medium', low: 'Low' };
@@ -24,9 +26,9 @@ function cardHTML(t) {
         <button class="icon-btn" type="button" data-action="menu" data-id="${t.id}" aria-haspopup="menu" aria-label="More actions">⋯</button>
       </div>
       <button class="card__open" type="button" data-action="open" data-id="${t.id}">
-        <h3 class="card__title">${escapeHtml(t.title)}</h3>
+        <h3 class="card__title">${highlight(t.title)}</h3>
       </button>
-      ${t.description ? `<p class="card__desc">${escapeHtml(t.description)}</p>` : ''}
+      ${t.description ? `<p class="card__desc">${highlight(t.description)}</p>` : ''}
       ${tags}
       <div class="card__foot">
         ${dueText || '<span></span>'}
@@ -35,7 +37,8 @@ function cardHTML(t) {
     </article>`;
 }
 
-function emptyHTML(status) {
+function emptyHTML(status, filtering) {
+  if (filtering) return `<div class="empty"><h3>Nothing here</h3><p>No matching tasks in this column.</p></div>`;
   const [title, text] = EMPTY[status];
   const cta = status === 'todo'
     ? '<button class="btn btn--primary" type="button" data-action="add" data-status="todo">+ Add task</button>'
@@ -50,18 +53,44 @@ function renderStats() {
   ].map(([label, n]) => `<div class="stat"><dt>${label}</dt><dd>${n}</dd></div>`).join('');
 }
 
+function highlight(text) {
+  const q = queryState.search.trim();
+  if (!q) return escapeHtml(text);
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'ig');
+  return escapeHtml(text).replace(re, '<mark>$1</mark>');
+}
+
 function renderBoard() {
+  const visible = getVisibleTasks();
+  const filtering = isFiltering();
+  const panel = document.querySelector('#noResults');
+
+  if (filtering && visible.length === 0 && state.tasks.length > 0) {
+    panel.hidden = false;
+    document.querySelector('#board').hidden = true;
+  } else {
+    panel.hidden = true;
+    document.querySelector('#board').hidden = false;
+  }
+
   STATUSES.forEach((status) => {
-    const list = state.tasks
-      .filter((t) => t.status === status)
-      .sort((a, b) => b.created.localeCompare(a.created));
+    const list = visible.filter((t) => t.status === status);
     document.querySelector(`[data-count="${status}"]`).textContent = list.length;
     document.querySelector(`[data-body="${status}"]`).innerHTML =
-      list.length ? list.map(cardHTML).join('') : emptyHTML(status);
+      list.length ? list.map(cardHTML).join('') : emptyHTML(status, filtering);
   });
+
+  const results = document.querySelector('#results');
+  if (filtering) {
+    results.hidden = false;
+    results.textContent = `Showing ${visible.length} of ${state.tasks.length} tasks`;
+  } else {
+    results.hidden = true;
+  }
 }
 
 export function render() {
   renderStats();
   renderBoard();
+  makeCardsDraggable();
 }

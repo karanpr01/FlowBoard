@@ -1,3 +1,6 @@
+import './search.js';
+import './filters.js';
+import './dragdrop.js';
 import { render } from './render.js';
 import { openTaskForm } from './modal.js';
 import { openMenu } from './menu.js';
