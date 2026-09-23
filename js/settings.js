@@ -1,8 +1,7 @@
-import { state } from './tasks.js';
+import { state, clearAllTasks, importTasks } from './tasks.js';
 import { render } from './render.js';
 import { showToast } from './toast.js';
 import { applyTheme, syncSettingsRadios } from './theme.js';
-import { saveTasks } from './storage.js';
 
 const dialog = document.querySelector('#settingsDialog');
 const clearDialog = document.querySelector('#clearDialog');
@@ -27,7 +26,6 @@ function showMsg(text, ok = true) {
   msg.className = `settings-msg settings-msg--${ok ? 'ok' : 'err'}`;
 }
 
-// --- Export ---
 document.querySelector('#exportBtn').addEventListener('click', () => {
   if (!state.tasks.length) return showMsg("You don't have any tasks to export yet.", false);
   const payload = JSON.stringify({ app: 'FlowBoard', exportedAt: new Date().toISOString(), tasks: state.tasks }, null, 2);
@@ -42,7 +40,6 @@ document.querySelector('#exportBtn').addEventListener('click', () => {
   showMsg(`Exported ${state.tasks.length} tasks.`);
 });
 
-// --- Import ---
 const fileInput = document.querySelector('#importFile');
 document.querySelector('#importBtn').addEventListener('click', () => fileInput.click());
 
@@ -57,8 +54,7 @@ fileInput.addEventListener('change', async () => {
 
     const existingIds = new Set(state.tasks.map((t) => t.id));
     const clean = incoming.filter((t) => t && t.title && !existingIds.has(t.id));
-    state.tasks.push(...clean);
-    saveTasks(state.tasks);
+    importTasks(clean);
     render();
     showMsg(`Imported ${clean.length} tasks.`);
   } catch {
@@ -66,7 +62,6 @@ fileInput.addEventListener('change', async () => {
   }
 });
 
-// --- Clear all data ---
 const clearBtn = document.querySelector('#clearDataBtn');
 const clearInput = document.querySelector('#clearInput');
 const clearConfirmBtn = document.querySelector('#clearConfirmBtn');
@@ -82,8 +77,7 @@ clearInput.addEventListener('input', () => {
 });
 
 clearConfirmBtn.addEventListener('click', () => {
-  state.tasks.length = 0; // empties the array in place — other files hold this same reference
-  saveTasks(state.tasks);
+  clearAllTasks();
   render();
   clearDialog.close();
   showToast('All tasks deleted.');

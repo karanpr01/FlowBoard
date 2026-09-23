@@ -1,7 +1,17 @@
 import { loadTasks, saveTasks } from './storage.js';
 import { todayISO } from './utils.js';
 
-export const state = { tasks: loadTasks() };
+const loaded = loadTasks();
+export const state = { tasks: loaded.tasks, storageOk: true };
+export const loadIssue = { corrupted: loaded.corrupted, raw: loaded.raw };
+
+// Every write goes through this one function, so storage-failure
+// tracking only has to be handled in one place.
+function persist() {
+  state.storageOk = saveTasks(state.tasks);
+  return state.storageOk;
+}
+export function retryPersist() { return persist(); }
 
 function touch(task) {
   task.updated = new Date().toISOString();
@@ -15,7 +25,7 @@ export function createTask({ title, description, priority, due, status, tags }) 
     created: now,
     updated: now,
   });
-  return saveTasks(state.tasks);
+  return persist();
 }
 
 export function getTask(id) {
@@ -27,7 +37,7 @@ export function updateTask(id, changes) {
   if (!task) return false;
   Object.assign(task, changes);
   touch(task);
-  return saveTasks(state.tasks);
+  return persist();
 }
 
 export function moveTask(id, status) {
@@ -38,14 +48,23 @@ export function deleteTask(id) {
   const index = state.tasks.findIndex((t) => t.id === id);
   if (index === -1) return null;
   const [removed] = state.tasks.splice(index, 1);
-  saveTasks(state.tasks);
+  persist();
   return { removed, index };
 }
 
-// Puts a deleted task back at its original position — used by Undo.
 export function restoreTask(removed, index) {
   state.tasks.splice(index, 0, removed);
-  return saveTasks(state.tasks);
+  return persist();
+}
+
+export function clearAllTasks() {
+  state.tasks.length = 0; // empty in place — see note below
+  return persist();
+}
+
+export function importTasks(newTasks) {
+  state.tasks.push(...newTasks);
+  return persist();
 }
 
 export function getStats() {

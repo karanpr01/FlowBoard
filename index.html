@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="css/components.css" />
   </head>
   <body>
+    <a class="skip-link" href="#appContent">Skip to board</a>
+
     <header class="topbar">
       <div class="topbar__inner">
         <a class="brand" href="./">FlowBoard</a>
@@ -55,114 +57,139 @@
     </header>
 
     <main class="wrap">
-      <h1>Board</h1>
-      <dl class="stats" id="stats" aria-label="Task summary"></dl>
+      <div id="banner"></div>
 
-      <div class="toolbar">
-        <div class="chips" id="chips" role="group" aria-label="Filter tasks">
-          <button
-            class="chip"
-            type="button"
-            data-filter="all"
-            aria-pressed="true"
-          >
-            All
+      <div class="panel panel--error" id="corruptPanel" hidden>
+        <h2>We couldn't read your saved tasks</h2>
+        <p>
+          The data stored in this browser looks damaged, so FlowBoard didn't
+          load it. Nothing has been overwritten yet.
+        </p>
+        <div class="panel__actions">
+          <button class="btn btn--primary" type="button" id="corruptRetry">
+            Try again
           </button>
-          <button class="chip" type="button" data-filter="high">
-            High priority
+          <button class="btn btn--secondary" type="button" id="corruptCopy">
+            Copy raw data
           </button>
-          <button class="chip" type="button" data-filter="medium">
-            Medium priority
-          </button>
-          <button class="chip" type="button" data-filter="low">
-            Low priority
-          </button>
-          <button class="chip" type="button" data-filter="today">
-            Due today
-          </button>
-          <button class="chip" type="button" data-filter="overdue">
-            Overdue
-          </button>
-          <button class="chip" type="button" data-filter="done">
-            Completed
+          <button class="btn btn--danger" type="button" id="corruptFresh">
+            Start fresh
           </button>
         </div>
-        <select
-          class="input select-sort"
-          id="sortSelect"
-          aria-label="Sort tasks"
-        >
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-          <option value="due">Due date</option>
-          <option value="priority">Priority</option>
-          <option value="az">A–Z</option>
-        </select>
-      </div>
-      <p class="results" id="results" hidden></p>
-      <div class="tabs" id="tabs" role="tablist" aria-label="Board columns">
-        <button
-          class="tab"
-          type="button"
-          data-tab="todo"
-          role="tab"
-          aria-selected="true"
-        >
-          Todo <span class="pill" data-tab-count="todo">0</span>
-        </button>
-        <button
-          class="tab"
-          type="button"
-          data-tab="progress"
-          role="tab"
-          aria-selected="false"
-        >
-          In progress <span class="pill" data-tab-count="progress">0</span>
-        </button>
-        <button
-          class="tab"
-          type="button"
-          data-tab="done"
-          role="tab"
-          aria-selected="false"
-        >
-          Done <span class="pill" data-tab-count="done">0</span>
-        </button>
       </div>
 
-      <div class="board" id="board">
-        <section class="column" data-status="todo" aria-labelledby="h-todo">
-          <div class="column__head">
-            <h2 id="h-todo">Todo</h2>
-            <span class="count" data-count="todo">0</span>
+      <div id="appContent" tabindex="-1">
+        <h1>Board</h1>
+        <dl class="stats" id="stats" aria-label="Task summary"></dl>
+
+        <div class="toolbar">
+          <div class="chips" id="chips" role="group" aria-label="Filter tasks">
+            <button
+              class="chip"
+              type="button"
+              data-filter="all"
+              aria-pressed="true"
+            >
+              All
+            </button>
+            <button class="chip" type="button" data-filter="high">
+              High priority
+            </button>
+            <button class="chip" type="button" data-filter="medium">
+              Medium priority
+            </button>
+            <button class="chip" type="button" data-filter="low">
+              Low priority
+            </button>
+            <button class="chip" type="button" data-filter="today">
+              Due today
+            </button>
+            <button class="chip" type="button" data-filter="overdue">
+              Overdue
+            </button>
+            <button class="chip" type="button" data-filter="done">
+              Completed
+            </button>
           </div>
-          <div class="column__body" data-body="todo"></div>
-        </section>
-        <section
-          class="column"
-          data-status="progress"
-          aria-labelledby="h-progress"
-        >
-          <div class="column__head">
-            <h2 id="h-progress">In progress</h2>
-            <span class="count" data-count="progress">0</span>
-          </div>
-          <div class="column__body" data-body="progress"></div>
-        </section>
-        <section class="column" data-status="done" aria-labelledby="h-done">
-          <div class="column__head">
-            <h2 id="h-done">Completed</h2>
-            <span class="count" data-count="done">0</span>
-          </div>
-          <div class="column__body" data-body="done"></div>
-        </section>
-      </div>
-      <div class="panel" id="noResults" hidden>
-        <h2>No tasks found</h2>
-        <p>Try a different search or clear your filters.</p>
-        <button class="btn btn--secondary" type="button" id="clearFiltersBtn">
-          Reset search and filters
-        </button>
+          <select
+            class="input select-sort"
+            id="sortSelect"
+            aria-label="Sort tasks"
+          >
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="due">Due date</option>
+            <option value="priority">Priority</option>
+            <option value="az">A–Z</option>
+          </select>
+        </div>
+        <p class="results" id="results" hidden></p>
+
+        <div class="tabs" id="tabs" role="tablist" aria-label="Board columns">
+          <button
+            class="tab"
+            type="button"
+            data-tab="todo"
+            role="tab"
+            aria-selected="true"
+          >
+            Todo <span class="pill" data-tab-count="todo">0</span>
+          </button>
+          <button
+            class="tab"
+            type="button"
+            data-tab="progress"
+            role="tab"
+            aria-selected="false"
+          >
+            In progress <span class="pill" data-tab-count="progress">0</span>
+          </button>
+          <button
+            class="tab"
+            type="button"
+            data-tab="done"
+            role="tab"
+            aria-selected="false"
+          >
+            Done <span class="pill" data-tab-count="done">0</span>
+          </button>
+        </div>
+
+        <div class="board" id="board">
+          <section class="column" data-status="todo" aria-labelledby="h-todo">
+            <div class="column__head">
+              <h2 id="h-todo">Todo</h2>
+              <span class="count" data-count="todo">0</span>
+            </div>
+            <div class="column__body" data-body="todo"></div>
+          </section>
+          <section
+            class="column"
+            data-status="progress"
+            aria-labelledby="h-progress"
+          >
+            <div class="column__head">
+              <h2 id="h-progress">In progress</h2>
+              <span class="count" data-count="progress">0</span>
+            </div>
+            <div class="column__body" data-body="progress"></div>
+          </section>
+          <section class="column" data-status="done" aria-labelledby="h-done">
+            <div class="column__head">
+              <h2 id="h-done">Completed</h2>
+              <span class="count" data-count="done">0</span>
+            </div>
+            <div class="column__body" data-body="done"></div>
+          </section>
+        </div>
+
+        <div class="panel" id="noResults" hidden>
+          <h2>No tasks found</h2>
+          <p>Try a different search or clear your filters.</p>
+          <button class="btn btn--secondary" type="button" id="clearFiltersBtn">
+            Reset search and filters
+          </button>
+        </div>
       </div>
     </main>
 
@@ -271,7 +298,6 @@
       </form>
     </dialog>
 
-    <div class="toasts" id="toasts" aria-live="polite"></div>
     <dialog id="detailsDialog" aria-labelledby="detailsTitle">
       <div class="dialog__head">
         <h2 id="detailsTitle">Task details</h2>
@@ -286,8 +312,6 @@
       </div>
       <div class="dialog__body" id="detailsBody"></div>
     </dialog>
-
-    <div class="menu" id="menu" role="menu" hidden></div>
 
     <dialog id="settingsDialog" aria-labelledby="settingsTitle">
       <div class="dialog__head">
@@ -391,6 +415,9 @@
         </button>
       </div>
     </dialog>
+
+    <div class="toasts" id="toasts" aria-live="polite"></div>
+    <div class="menu" id="menu" role="menu" hidden></div>
 
     <script type="module" src="js/main.js"></script>
   </body>

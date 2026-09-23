@@ -1,6 +1,6 @@
-import { state, getStats } from './tasks.js';
-import { escapeHtml, formatDate, todayISO } from './utils.js';
+import { state, getStats, retryPersist } from './tasks.js';
 import { getVisibleTasks, queryState, isFiltering } from './query.js';
+import { escapeHtml, formatDate, todayISO } from './utils.js';
 import { makeCardsDraggable } from './dragdrop.js';
 import { applyTabVisibility } from './tabs.js';
 
@@ -11,6 +11,13 @@ const EMPTY = {
   progress: ['Nothing in progress', 'Move a task here when you start working on it.'],
   done: ['No completed tasks', 'Completed tasks will appear here.'],
 };
+
+function highlight(text) {
+  const q = queryState.search.trim();
+  if (!q) return escapeHtml(text);
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'ig');
+  return escapeHtml(text).replace(re, '<mark>$1</mark>');
+}
 
 function cardHTML(t) {
   const overdue = t.due && t.due < todayISO() && t.status !== 'done';
@@ -24,7 +31,7 @@ function cardHTML(t) {
     <article class="card${t.status === 'done' ? ' card--done' : ''}" data-id="${t.id}">
       <div class="card__top">
         <span class="badge badge--${t.priority}">${PRIORITY_LABEL[t.priority]}</span>
-        <button class="icon-btn" type="button" data-action="menu" data-id="${t.id}" aria-haspopup="menu" aria-label="More actions">⋯</button>
+        <button class="icon-btn" type="button" data-action="menu" data-id="${t.id}" aria-haspopup="menu" aria-expanded="false" aria-label="More actions for ${escapeHtml(t.title)}">⋯</button>
       </div>
       <button class="card__open" type="button" data-action="open" data-id="${t.id}">
         <h3 class="card__title">${highlight(t.title)}</h3>
@@ -33,7 +40,7 @@ function cardHTML(t) {
       ${tags}
       <div class="card__foot">
         ${dueText || '<span></span>'}
-        <button class="check" type="button" data-action="toggle" data-id="${t.id}" aria-label="${t.status === 'done' ? 'Reopen' : 'Mark complete'}">✓</button>
+        <button class="check" type="button" data-action="toggle" data-id="${t.id}" aria-label="${t.status === 'done' ? 'Reopen' : 'Mark complete'}: ${escapeHtml(t.title)}">✓</button>
       </div>
     </article>`;
 }
@@ -54,24 +61,18 @@ function renderStats() {
   ].map(([label, n]) => `<div class="stat"><dt>${label}</dt><dd>${n}</dd></div>`).join('');
 }
 
-function highlight(text) {
-  const q = queryState.search.trim();
-  if (!q) return escapeHtml(text);
-  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'ig');
-  return escapeHtml(text).replace(re, '<mark>$1</mark>');
-}
-
 function renderBoard() {
   const visible = getVisibleTasks();
   const filtering = isFiltering();
   const panel = document.querySelector('#noResults');
+  const board = document.querySelector('#board');
 
   if (filtering && visible.length === 0 && state.tasks.length > 0) {
     panel.hidden = false;
-    document.querySelector('#board').hidden = true;
+    board.hidden = true;
   } else {
     panel.hidden = true;
-    document.querySelector('#board').hidden = false;
+    board.hidden = false;
   }
 
   STATUSES.forEach((status) => {
@@ -90,7 +91,22 @@ function renderBoard() {
   }
 }
 
+function renderBanner() {
+  const banner = document.querySelector('#banner');
+  if (state.storageOk) { banner.innerHTML = ''; return; }
+  banner.innerHTML = `
+    <div class="banner banner--warn" role="status">
+      <span>⚠️ Changes aren't being saved — this browser's storage isn't available right now.</span>
+      <button class="btn btn--secondary" type="button" id="retryStorageBtn">Retry</button>
+    </div>`;
+  document.querySelector('#retryStorageBtn').addEventListener('click', () => {
+    retryPersist();
+    render();
+  });
+}
+
 export function render() {
+  renderBanner();
   renderStats();
   renderBoard();
   makeCardsDraggable();
