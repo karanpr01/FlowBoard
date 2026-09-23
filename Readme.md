@@ -2,7 +2,7 @@
 
 A calm, focused personal Kanban board — capture tasks, move them across Todo → In Progress → Completed, and see your day at a glance.
 
-**[Live demo](https://<your-username>.github.io/flowboard/)**
+**[Live demo](http://flowboard-prem.vercel.app/)**
 
 ## Features
 - Create, edit, delete (with Undo), and view task details
