@@ -4,6 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>FlowBoard</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%234F46E5'/%3E%3Crect x='5' y='6' width='4' height='12' rx='1.5' fill='white'/%3E%3Crect x='10.5' y='6' width='4' height='8' rx='1.5' fill='white' fill-opacity='0.85'/%3E%3Crect x='16' y='6' width='4' height='5' rx='1.5' fill='white' fill-opacity='0.7'/%3E%3C/svg%3E"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -105,15 +110,12 @@
           stroke-width="2"
           stroke-linecap="round"
         >
-          <circle cx="12" cy="12" r="3" />
-          <line x1="19" y1="12" x2="22" y2="12" />
-          <line x1="17.07" y1="17.07" x2="19.19" y2="19.19" />
-          <line x1="12" y1="19" x2="12" y2="22" />
-          <line x1="6.93" y1="17.07" x2="4.81" y2="19.19" />
-          <line x1="5" y1="12" x2="2" y2="12" />
-          <line x1="6.93" y1="6.93" x2="4.81" y2="4.81" />
-          <line x1="12" y1="5" x2="12" y2="2" />
-          <line x1="17.07" y1="6.93" x2="19.19" y2="4.81" />
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="18" x2="20" y2="18" />
+          <circle cx="9" cy="6" r="2.2" fill="currentColor" stroke="none" />
+          <circle cx="16" cy="12" r="2.2" fill="currentColor" stroke="none" />
+          <circle cx="11" cy="18" r="2.2" fill="currentColor" stroke="none" />
         </symbol>
         <symbol
           id="i-sun"
@@ -124,17 +126,27 @@
           stroke-linecap="round"
         >
           <circle cx="12" cy="12" r="4" />
-          <line x1="17" y1="12" x2="19" y2="12" />
-          <line x1="15.54" y1="15.54" x2="16.95" y2="16.95" />
-          <line x1="12" y1="17" x2="12" y2="19" />
-          <line x1="8.46" y1="15.54" x2="7.05" y2="16.95" />
-          <line x1="7" y1="12" x2="5" y2="12" />
-          <line x1="8.46" y1="8.46" x2="7.05" y2="7.05" />
-          <line x1="12" y1="7" x2="12" y2="5" />
-          <line x1="15.54" y1="8.46" x2="16.95" y2="7.05" />
+          <line x1="18.5" y1="12" x2="21" y2="12" />
+          <line x1="16.6" y1="16.6" x2="18.36" y2="18.36" />
+          <line x1="12" y1="18.5" x2="12" y2="21" />
+          <line x1="7.4" y1="16.6" x2="5.64" y2="18.36" />
+          <line x1="5.5" y1="12" x2="3" y2="12" />
+          <line x1="7.4" y1="7.4" x2="5.64" y2="5.64" />
+          <line x1="12" y1="5.5" x2="12" y2="3" />
+          <line x1="16.6" y1="7.4" x2="18.36" y2="5.64" />
         </symbol>
         <symbol id="i-moon" viewBox="0 0 24 24">
-          <path d="M15 3A8 8 0 1 0 15 21A6 6 0 1 1 15 3Z" fill="currentColor" />
+          <mask id="moon-mask">
+            <rect x="0" y="0" width="24" height="24" fill="white" />
+            <circle cx="15" cy="9" r="7" fill="black" />
+          </mask>
+          <circle
+            cx="12"
+            cy="12"
+            r="9"
+            fill="currentColor"
+            mask="url(#moon-mask)"
+          />
         </symbol>
         <symbol
           id="i-calendar"
